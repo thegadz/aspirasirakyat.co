@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting — AspirasiRakyat.co</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>body{font-family:sans-serif;background:#f4f7f6;margin:0;padding:20px}h1{text-align:center}.voting-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}button{padding:12px;border-radius:8px;border:none;background:#3498db;color:#fff}</style>
+</head>
+<body>
+  <h1>Voting (AspirasiRakyat.co)</h1>
+  <div class="voting-container" id="voting-buttons"></div>
+  <div style="max-width:900px;margin:18px auto;background:#fff;padding:16px;border-radius:8px">
+    <canvas id="resultsChart" style="height:300px"></canvas>
+    <div id="stats-breakdown" style="margin-top:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:8px"></div>
+  </div>
+  <script>
+    const variables = ["Var 1","Var 2","Var 3","Var 4","Var 5","Var 6","Var 7","Var 8","Var 9","Var 10"];
+    let votes = new Array(10).fill(0);
+    let chartInstance=null;
+    function init(){const c=document.getElementById('voting-buttons');variables.forEach((n,i)=>{const b=document.createElement('button');b.innerText='Vote '+n;b.onclick=()=>{votes[i]++;chartUpdate();};c.appendChild(b)});const ctx=document.getElementById('resultsChart').getContext('2d');chartInstance=new Chart(ctx,{type:'bar',data:{labels:variables,datasets:[{data:votes,backgroundColor:['#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40','#E7E9ED','#8AC926','#1982C4','#F15BB5']}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}}}});}
+    function chartUpdate(){chartInstance.data.datasets[0].data=votes;chartInstance.update();updateStats();}
+    function updateStats(){const total=votes.reduce((a,b)=>a+b,0);document.getElementById('stats-breakdown').innerHTML='';variables.forEach((n,i)=>{const pct=total===0?0:((votes[i]/total)*100).toFixed(1);const d=document.createElement('div');d.style.background='#ecf0f1';d.style.padding='8px';d.style.borderRadius='6px';d.innerHTML=`${n}: <strong>${votes[i]} (${pct}%)</strong>`;document.getElementById('stats-breakdown').appendChild(d)})}
+    window.onload=init;
+  </script>
+</body>
+</html>
